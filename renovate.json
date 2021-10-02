@@ -1,0 +1,28 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:js-app",
+    ":automergeMinor",
+    ":maintainLockFilesMonthly",
+    ":rebaseStalePrs",
+    ":semanticCommits",
+    ":semanticCommitScope(deps)",
+    "docker:disableMajor",
+    "docker:pinDigests",
+    "group:linters",
+    "helpers:pinGitHubActionDigests"
+  ],
+  "dockerfile": {
+    "semanticCommitType": "build"
+  },
+  "packageRules": [
+    {
+      "matchDepTypes": ["dependencies"],
+      "semanticCommitType": "build"
+    },
+    {
+      "matchPackageNames": ["semantic-release"],
+      "semanticCommitType": "build"
+    }
+  ]
+}

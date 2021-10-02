@@ -1,0 +1,150 @@
+name: build
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+env:
+  IMAGE_NAME: ghcr.io/maxbrunet/renovate-approve-bot
+  NODE_VERSION: 14
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # renovate: tag=v2.3.4
+        with:
+          fetch-depth: 2
+
+      - name: Set up Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@270253e841af726300e85d718a5f606959b2903c # renovate: tag=v2.4.1
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Init platform
+        run: |
+          git config --global core.autocrlf false
+          git config --global core.symlinks true
+          npm config set scripts-prepend-node-path true
+          echo "Node $(node --version)"
+
+      - name: Installing dependencies
+        run: npm ci
+
+      - name: Testing
+        run: npm run jest --maxWorkers=2 --ci
+
+  lint:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # renovate: tag=v2.3.4
+        with:
+          fetch-depth: 2
+
+      - name: Set up Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@270253e841af726300e85d718a5f606959b2903c # renovate: tag=v2.4.1
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Init platform
+        run: |
+          git config --global core.autocrlf false
+          git config --global core.symlinks true
+          npm config set scripts-prepend-node-path true
+          echo "Node $(node --version)"
+
+      - name: Installing dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+  build:
+    needs: [lint, test]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      packages: write
+      pull-requests: write
+
+    timeout-minutes: 10
+
+    steps:
+      # full checkout for semantic-release
+      - uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # renovate: tag=v2.3.4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@270253e841af726300e85d718a5f606959b2903c # renovate: tag=v2.4.1
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Init platform
+        run: |
+          git config --global core.autocrlf false
+          git config --global core.symlinks true
+          npm config set scripts-prepend-node-path true
+          echo "Node $(node --version)"
+
+      - name: Installing dependencies
+        run: npm ci
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@27d0a4f181a40b142cce983c5393082c365d1480 # renovate: tag=v1.2.0
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@94ab11c41e45d028884a99163086648e898eed25 # renovate: tag=v1.6.0
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9 # renovate: tag=v1.10.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build container images
+        uses: docker/build-push-action@a66e35b9cbcf4ad0ea91ffcaf7bbad63ad9e0229 # renovate: tag=v2.7.0
+        with:
+          platforms: linux/amd64,linux/arm/v7,linux/arm64
+          tags: ${{ env.IMAGE_NAME }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: semantic-release
+        run: npx semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push container images
+        if: ${{ github.ref == 'refs/heads/main' && env.IMAGE_TAG != '' }}
+        uses: docker/build-push-action@a66e35b9cbcf4ad0ea91ffcaf7bbad63ad9e0229 # renovate: tag=v2.7.0
+        with:
+          platforms: linux/amd64,linux/arm/v7,linux/arm64
+          push: true
+          # IMAGE_TAG is set by @semantic-release/exec (see .releaserc file)
+          tags: |
+            ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+            ${{ env.IMAGE_NAME }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

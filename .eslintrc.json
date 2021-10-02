@@ -1,0 +1,19 @@
+{
+  "root": true,
+  "env": {
+    "node": true
+  },
+  "extends": [
+    "airbnb-base",
+    "plugin:import/errors",
+    "plugin:import/warnings",
+    "plugin:jest/recommended",
+    "plugin:jest/style",
+    "plugin:promise/recommended",
+    "prettier"
+  ],
+  "rules": {
+    "no-restricted-syntax": 0,
+    "no-underscore-dangle": 0
+  }
+}
