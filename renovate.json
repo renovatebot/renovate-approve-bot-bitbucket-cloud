@@ -2,6 +2,7 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:js-app",
+    ":automergeDigest",
     ":automergeMinor",
     ":maintainLockFilesMonthly",
     ":rebaseStalePrs",
@@ -12,12 +13,13 @@
     "group:linters",
     "helpers:pinGitHubActionDigests"
   ],
-  "dockerfile": {
-    "semanticCommitType": "build"
-  },
   "packageRules": [
     {
       "matchDepTypes": ["dependencies"],
+      "semanticCommitType": "build"
+    },
+    {
+      "matchManagers": ["dockerfile"],
       "semanticCommitType": "build"
     },
     {
