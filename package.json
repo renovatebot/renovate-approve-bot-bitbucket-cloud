@@ -19,7 +19,7 @@
     "@semantic-release/exec": "6.0.1",
     "babel-plugin-rewire": "1.2.0",
     "conventional-changelog-conventionalcommits": "4.6.1",
-    "eslint": "8.0.0",
+    "eslint": "8.0.1",
     "eslint-config-airbnb-base": "14.2.1",
     "eslint-config-prettier": "8.3.0",
     "eslint-formatter-gha": "1.2.0",
