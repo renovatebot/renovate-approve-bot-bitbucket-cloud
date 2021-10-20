@@ -13,6 +13,7 @@
     "group:linters",
     "helpers:pinGitHubActionDigests"
   ],
+  "assignees": ["maxbrunet"],
   "packageRules": [
     {
       "matchDepTypes": ["dependencies"],
