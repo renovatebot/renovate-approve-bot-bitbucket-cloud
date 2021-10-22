@@ -1,4 +1,4 @@
-FROM docker.io/library/node:14.18.1-alpine@sha256:a251de4db0e0632446c0ba62adbe1e37ff148a53732e4574d2ed0f5462cc4407
+FROM docker.io/library/node:14.18.1-alpine@sha256:9079c86b161bbfc3d636a5a4bb1e2ff27e88d54db35801a94d4db06bcb43ce42
 
 WORKDIR /opt/app
 
