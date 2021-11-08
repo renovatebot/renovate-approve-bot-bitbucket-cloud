@@ -13,6 +13,6 @@ RUN npm install --production
 
 COPY index.js .
 
-USER 65534:65534
+USER 1000:1000
 
 CMD ["index.js"]
