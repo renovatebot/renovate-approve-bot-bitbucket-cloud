@@ -4,6 +4,14 @@ A job to approve Pull Requests from [Renovate Bot](https://github.com/renovatebo
 
 For Github, see [renovatebot/renovate-approve-bot](https://github.com/renovatebot/renovate-approve-bot).
 
+## How It Works
+
+On a each run, the bot does:
+
+1. Get all the open PRs from the Renovate Bot user
+2. Filter out PRs where "automerge" is not enabled
+3. Approve the "automerge" PRs
+
 ## Usage
 
 1. Create a Bitbucket Cloud account for the renovate-approve-bot and add it to your team (Recommended)
