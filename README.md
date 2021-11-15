@@ -4,12 +4,12 @@ A job to approve Pull Requests from [Renovate Bot](https://github.com/renovatebo
 
 For Github, see [renovatebot/renovate-approve-bot](https://github.com/renovatebot/renovate-approve-bot).
 
-## How It Works
+## How it works
 
-On a each run, the bot does:
+On each run, the bot will:
 
 1. Get all the open PRs from the Renovate Bot user
-2. Filter out PRs where "automerge" is not enabled
+2. Filter out PRs where "automerge" is disabled
 3. Approve the "automerge" PRs
 
 ## Usage
