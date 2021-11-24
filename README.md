@@ -61,3 +61,8 @@ Example to run renovate-approve-bot in a custom Bitbucket Pipeline on a schedule
    ```
 
 3. Create a [schedule](https://support.atlassian.com/bitbucket-cloud/docs/pipeline-triggers/#On-schedule) for the custom pipeline (e.g. Hourly)
+
+## Security / Disclosure
+
+If you discover any important bug with `renovate-approve-bot-bitbucket-cloud` that may pose a security problem, please disclose it confidentially to renovate-disclosure@whitesourcesoftware.com first, so that it can be assessed and hopefully fixed prior to being exploited.
+Please do not raise GitHub issues for security-related doubts or problems.
