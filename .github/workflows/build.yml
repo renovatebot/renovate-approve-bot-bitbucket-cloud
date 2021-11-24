@@ -7,7 +7,7 @@ on:
   pull_request:
 
 env:
-  IMAGE_NAME: ghcr.io/maxbrunet/renovate-approve-bot
+  IMAGE_NAME: ghcr.io/renovatebot/renovate-approve-bot-bitbucket-cloud
   NODE_VERSION: 14
 
 concurrency:
