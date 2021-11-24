@@ -4,6 +4,8 @@ A job to approve Pull Requests from [Renovate Bot](https://github.com/renovatebo
 
 For Github, see [renovatebot/renovate-approve-bot](https://github.com/renovatebot/renovate-approve-bot).
 
+[![build](https://github.com/renovatebot/renovate-approve-bot-bitbucket-cloud/actions/workflows/build.yml/badge.svg)](https://github.com/renovatebot/renovate-approve-bot-bitbucket-cloud/actions/workflows/build.yml)
+
 ## How it works
 
 On each run, the bot will:
