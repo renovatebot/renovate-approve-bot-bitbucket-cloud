@@ -4,6 +4,8 @@ A job to approve Pull Requests from [Renovate Bot](https://github.com/renovatebo
 
 For Github, see [renovatebot/renovate-approve-bot](https://github.com/renovatebot/renovate-approve-bot).
 
+[![build](https://github.com/renovatebot/renovate-approve-bot-bitbucket-cloud/actions/workflows/build.yml/badge.svg)](https://github.com/renovatebot/renovate-approve-bot-bitbucket-cloud/actions/workflows/build.yml)
+
 ## How it works
 
 On each run, the bot will:
@@ -31,7 +33,7 @@ On each run, the bot will:
        --env BITBUCKET_USERNAME \
        --env BITBUCKET_PASSWORD \
        --env RENOVATE_BOT_USER \
-       ghcr.io/maxbrunet/renovate-approve-bot:latest
+       ghcr.io/renovatebot/renovate-approve-bot-bitbucket-cloud:latest
      ```
 
    - From source:
@@ -54,7 +56,7 @@ Example to run renovate-approve-bot in a custom Bitbucket Pipeline on a schedule
        renovate-approve-bot:
          - step:
              name: Renovate Approve Bot
-             image: ghcr.io/maxbrunet/renovate-approve-bot:latest
+             image: ghcr.io/renovatebot/renovate-approve-bot-bitbucket-cloud:latest
              script:
                - export RENOVATE_BOT_USER=your-renovate-bot-user
                - node /opt/app/index.js
