@@ -5,6 +5,8 @@ on:
     branches:
       - main
   pull_request:
+    branches:
+      - main
 
 env:
   IMAGE_NAME: ghcr.io/renovatebot/renovate-approve-bot-bitbucket-cloud
@@ -77,8 +79,44 @@ jobs:
       - name: Lint
         run: npm run lint
 
+  codeql-analyze:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # renovate: tag=v2.4.0
+
+      - name: Set up Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@270253e841af726300e85d718a5f606959b2903c # renovate: tag=v2.4.1
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Init platform
+        run: |
+          git config --global core.autocrlf false
+          git config --global core.symlinks true
+          npm config set scripts-prepend-node-path true
+          echo "Node $(node --version)"
+
+      - name: Installing dependencies
+        run: npm ci
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@e095058bfa09de8070f94e98f5dc059531bc6235 # renovate: tag=v1.0.24
+        with:
+          languages: javascript
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@e095058bfa09de8070f94e98f5dc059531bc6235 # renovate: tag=v1.0.24
+
   build:
-    needs: [lint, test]
+    needs: [codeql-analyze, lint, test]
     runs-on: ubuntu-latest
     permissions:
       contents: write
