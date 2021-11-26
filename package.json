@@ -6,8 +6,8 @@
     "jest": "jest",
     "lint": "run-s eslint prettier",
     "lint-fix": "run-s eslint-fix prettier-fix",
-    "prettier": "prettier --check \"**/*.{js,json,md}\"",
-    "prettier-fix": "prettier --write \"**/*.{js,json,md}\"",
+    "prettier": "prettier --check \"**/*.{js,json,md,yml}\"",
+    "prettier-fix": "prettier --write \"**/*.{js,json,md,yml}\"",
     "start": "node ./index.js",
     "test": "run-s lint jest"
   },
