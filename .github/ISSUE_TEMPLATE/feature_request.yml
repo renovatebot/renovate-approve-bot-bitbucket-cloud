@@ -3,9 +3,9 @@ description: Suggest an idea for this project.
 labels: ['type:feature', 'status:requirements', 'priority-5-triage']
 body:
   - type: textarea
-    id: what-would-you-like-renovate-to-be-able-to-do
+    id: what-would-you-like-renovate-approve-bot-to-be-able-to-do
     attributes:
-      label: What would you like the approve bot to be able to do?
+      label: What would you like the Renovate Approve Bot to be able to do?
       placeholder: "Tell us what requirements you need solving, and be sure to mention too if this is part of any bigger problem you're trying to solve."
     validations:
       required: true

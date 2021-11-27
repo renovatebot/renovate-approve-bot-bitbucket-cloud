@@ -3,10 +3,10 @@ description: Report a bug.
 labels: ['type:bug', 'status:requirements', 'priority-5-triage']
 body:
   - type: input
-    id: version-of-renovate-approve-bot-bitbucket-cloud-edition
+    id: version-of-renovate-approve-bot
     attributes:
       label: Version.
-      description: What version of the Renovate approve bot Bitbucket Cloud Edition are you using?
+      description: What version of the Renovate Approve Bot are you using?
     validations:
       required: true
 
