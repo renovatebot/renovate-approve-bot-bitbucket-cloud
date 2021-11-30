@@ -38,10 +38,6 @@
   "engines": {
     "node": ">=14.15.0"
   },
-  "engines-next": {
-    "description": "Versions other than the below are deprecated and a warning will be logged",
-    "node": ">=14.15.0"
-  },
   "dependencies": {
     "bunyan": "1.8.15",
     "got": "11.8.3"
