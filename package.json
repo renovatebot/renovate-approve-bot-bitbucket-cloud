@@ -19,14 +19,11 @@
   },
   "keywords": [
     "bitbucket",
-    "dependencies",
-    "dependency",
-    "docker",
-    "management",
-    "outdated",
-    "update"
+    "bitbucket-cloud",
+    "bot",
+    "renovate"
   ],
-  "author": "Maxime Brunet <insert-email-here>",
+  "author": "Maxime Brunet",
   "contributors": [
     "HonkingGoose",
     "Michael Kriese <michael.kriese@visualon.de>"
