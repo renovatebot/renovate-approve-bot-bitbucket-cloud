@@ -1,4 +1,6 @@
 {
+  "name": "renovate-approve-bot-bitbucket-cloud",
+  "description": "A job to approve Pull Requests from Renovate Bot on Bitbucket Cloud.",
   "private": true,
   "scripts": {
     "eslint": "eslint --ext .js .",
@@ -10,6 +12,29 @@
     "prettier-fix": "prettier --write \"**/*.{js,json,md}\"",
     "start": "node ./index.js",
     "test": "run-s lint jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/renovatebot/renovate-approve-bot-bitbucket-cloud.git"
+  },
+  "keywords": [
+    "automerge",
+    "bitbucket-cloud",
+    "bitbucket",
+    "bot",
+    "renovate"
+  ],
+  "author": "Maxime Brunet",
+  "contributors": [
+    "HonkingGoose",
+    "Michael Kriese <michael.kriese@visualon.de>"
+  ],
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/renovatebot/renovate-approve-bot-bitbucket-cloud/issues"
+  },
+  "engines": {
+    "node": ">=14.15.0"
   },
   "dependencies": {
     "bunyan": "1.8.15",
