@@ -1,19 +1,9 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:js-app",
-    ":automergeDigest",
-    ":automergeMinor",
-    ":maintainLockFilesMonthly",
-    ":rebaseStalePrs",
-    ":semanticCommits",
-    ":semanticCommitScope(deps)",
-    "docker:disableMajor",
-    "docker:pinDigests",
-    "group:linters",
-    "helpers:pinGitHubActionDigests"
-  ],
-  "assignees": ["maxbrunet"],
+  "extends": ["github>renovatebot/.github"],
+  "assignees": ["maxbrunet", "rarkins", "viceice"],
+  "automergeType": "pr",
+  "prCreation": "immediate",
   "packageRules": [
     {
       "matchDepTypes": ["dependencies"],
