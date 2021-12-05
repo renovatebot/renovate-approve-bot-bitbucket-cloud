@@ -1,0 +1,175 @@
+# These settings are synced to GitHub by https://probot.github.io/apps/settings/
+
+repository:
+  name: renovate-approve-bot-bitbucket-cloud
+  description: renovate-approve-bot - Bitbucket Cloud Edition
+  homepage: ''
+  topics: bot, bitbucket, bitbucket-cloud, renovate, automerge
+  private: false
+  visibility: public
+  security_and_analysis:
+    advanced_security:
+      status: enabled
+    secret_scanning:
+      status: enabled
+  has_issues: true
+  has_projects: false
+  has_wiki: false
+  is_template: false
+  default_branch: main
+  allow_squash_merge: true
+  allow_merge_commit: false
+  allow_rebase_merge: false
+  allow_auto_merge: true
+  delete_branch_on_merge: true
+  archived: false
+  allow_forking: false
+  # Dependabot
+  enable_automated_security_fixes: false
+  enable_vulnerability_alerts: false
+
+labels:
+  - name: bug
+    color: '#d73a4a'
+    description: Something isn't working
+
+  - name: documentation
+    color: '#0075ca'
+    description: Improvements or additions to documentation
+
+  - name: duplicate
+    color: '#cfd3d7'
+    description: This issue or pull request already exists
+
+  - name: enhancement
+    color: '#a2eeef'
+    description: New feature or request
+
+  - name: good first issue
+    color: '#7057ff'
+    description: Good for newcomers
+
+  - name: help wanted
+    color: '#008672'
+    description: Extra attention is needed
+
+  - name: invalid
+    color: '#e4e669'
+    description: This doesn't seem right
+
+  - name: priority-1-critical
+    color: &priorityColor '#c2e0c6'
+    description: A bad bug or work that is holding up a lot of other important features or fixes
+
+  - name: priority-2-important
+    color: *priorityColor
+    description: User-visible bugs or very important features
+
+  - name: priority-3-normal
+    color: *priorityColor
+    description: Default priority, "should be done" but isn't prioritised ahead of others
+
+  - name: priority-4-low
+    color: *priorityColor
+    description: Low priority, unlikely to be done unless it becomes important to more people
+
+  - name: priority-5-triage
+    color: *priorityColor
+    description: Needs Priority triage and a new priority label assigned
+
+  - name: question
+    color: '#d876e3'
+    description: Further information is requested
+
+  - name: status:blocked
+    color: &statusColor '#1d76db'
+    description: Issue is blocked by another issue or external requirement
+
+  - name: status:in-progress
+    color: *statusColor
+    description: Someone is working on implementation
+
+  - name: status:ready
+    color: *statusColor
+    description: Ready to start implementation
+
+  - name: status:requirements
+    color: *statusColor
+    description: Full requirements are not yet known, so implementation should not be started
+
+  - name: status:waiting-on-response
+    color: *statusColor
+    description: Waiting on a response/more information from the user
+
+  - name: type:bug
+    color: &typeColor '#006b75'
+    description: Bug fix of existing functionality
+
+  - name: type:docs
+    color: *typeColor
+    description: Documentation
+
+  - name: type:feature
+    color: *typeColor
+    description: Feature (new functionality)
+
+  - name: type:help
+    color: *typeColor
+    description: Issues which should be converted to discussion
+
+  - name: type:refactor
+    color: *typeColor
+    description: Refactoring or improving of existing code
+
+  - name: wontfix
+    color: '#ffffff'
+    description: This will not be worked on
+
+milestones: []
+
+collaborators:
+  - username: HonkingGoose
+    permission: triage
+  - username: JamieMagee
+    permission: maintain
+  - username: maxbrunet
+    permission: admin
+  - username: rarkins
+    permission: admin
+  - username: viceice
+    permission: maintain
+
+teams: []
+
+branches:
+  - name: main
+    protection:
+      required_status_checks:
+        strict: true
+        checks:
+          - context: test
+            app_id: 15368 # GitHub Actions
+          - context: lint
+            app_id: 15368 # GitHub Actions
+          - context: codeql-analyze
+            app_id: 15368 # GitHub Actions
+          - context: build
+            app_id: 15368 # GitHub Actions
+          - context: Semantic Pull Request
+            app_id: 9517 # Semantic Pull Requests
+      enforce_admins: true
+      required_pull_request_reviews:
+        dismissal_restrictions:
+          users: []
+          teams: []
+        dismiss_stale_reviews: true
+        require_code_owner_reviews: true
+      restrictions:
+        users: []
+        teams: []
+        apps: []
+      required_linear_history: true
+      required_signatures: false
+      allow_force_pushes: false
+      allow_deletions: false
+      required_conversation_resolution: true
