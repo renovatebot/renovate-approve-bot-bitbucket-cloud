@@ -10,7 +10,6 @@ on:
 
 env:
   IMAGE_NAME: ghcr.io/renovatebot/renovate-approve-bot-bitbucket-cloud
-  NODE_VERSION: 14
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.number || github.ref }}
@@ -25,27 +24,31 @@ jobs:
     timeout-minutes: 10
 
     steps:
-      - uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # renovate: tag=v2.4.0
+      - name: Checkout repository
+        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # renovate: tag=v2.4.0
         with:
           fetch-depth: 2
 
-      - name: Set up Node.js ${{ env.NODE_VERSION }}
+      - name: Set up Node.js
         uses: actions/setup-node@04c56d2f954f1e4c69436aa54cfef261a018f458 # renovate: tag=v2.5.0
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version-file: .nvmrc
           cache: npm
 
       - name: Init platform
         run: |
           git config --global core.autocrlf false
           git config --global core.symlinks true
+          git config --global user.email 'renovate@whitesourcesoftware.com'
+          git config --global user.name  'Renovate Bot'
           npm config set scripts-prepend-node-path true
           echo "Node $(node --version)"
+          echo "npm $(npm --version)"
 
-      - name: Installing dependencies
+      - name: Install Node.js dependencies
         run: npm ci
 
-      - name: Testing
+      - name: Run tests
         run: npm run jest --maxWorkers=2 --ci
 
   lint:
@@ -56,24 +59,28 @@ jobs:
     timeout-minutes: 10
 
     steps:
-      - uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # renovate: tag=v2.4.0
+      - name: Checkout repository
+        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # renovate: tag=v2.4.0
         with:
           fetch-depth: 2
 
-      - name: Set up Node.js ${{ env.NODE_VERSION }}
+      - name: Set up Node.js
         uses: actions/setup-node@04c56d2f954f1e4c69436aa54cfef261a018f458 # renovate: tag=v2.5.0
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version-file: .nvmrc
           cache: npm
 
       - name: Init platform
         run: |
           git config --global core.autocrlf false
           git config --global core.symlinks true
+          git config --global user.email 'renovate@whitesourcesoftware.com'
+          git config --global user.name  'Renovate Bot'
           npm config set scripts-prepend-node-path true
           echo "Node $(node --version)"
+          echo "npm $(npm --version)"
 
-      - name: Installing dependencies
+      - name: Install Node.js dependencies
         run: npm ci
 
       - name: Lint
@@ -90,22 +97,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # renovate: tag=v2.4.0
-
-      - name: Set up Node.js ${{ env.NODE_VERSION }}
-        uses: actions/setup-node@04c56d2f954f1e4c69436aa54cfef261a018f458 # renovate: tag=v2.5.0
         with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: npm
-
-      - name: Init platform
-        run: |
-          git config --global core.autocrlf false
-          git config --global core.symlinks true
-          npm config set scripts-prepend-node-path true
-          echo "Node $(node --version)"
-
-      - name: Installing dependencies
-        run: npm ci
+          fetch-depth: 2
 
       - name: Initialize CodeQL
         uses: github/codeql-action/init@e095058bfa09de8070f94e98f5dc059531bc6235 # renovate: tag=v1.0.24
@@ -128,24 +121,28 @@ jobs:
 
     steps:
       # full checkout for semantic-release
-      - uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # renovate: tag=v2.4.0
+      - name: Checkout repository
+        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # renovate: tag=v2.4.0
         with:
           fetch-depth: 0
 
-      - name: Set up Node.js ${{ env.NODE_VERSION }}
+      - name: Set up Node.js
         uses: actions/setup-node@04c56d2f954f1e4c69436aa54cfef261a018f458 # renovate: tag=v2.5.0
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version-file: .nvmrc
           cache: npm
 
       - name: Init platform
         run: |
           git config --global core.autocrlf false
           git config --global core.symlinks true
+          git config --global user.email 'renovate@whitesourcesoftware.com'
+          git config --global user.name  'Renovate Bot'
           npm config set scripts-prepend-node-path true
           echo "Node $(node --version)"
+          echo "npm $(npm --version)"
 
-      - name: Installing dependencies
+      - name: Install Node.js dependencies
         run: npm ci
 
       - name: Set up QEMU
@@ -175,7 +172,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Push container images
-        if: ${{ github.ref == 'refs/heads/main' && env.IMAGE_TAG != '' }}
+        if: ${{ env.IMAGE_TAG != '' }}
         uses: docker/build-push-action@a66e35b9cbcf4ad0ea91ffcaf7bbad63ad9e0229 # renovate: tag=v2.7.0
         with:
           platforms: linux/amd64,linux/arm/v7,linux/arm64
