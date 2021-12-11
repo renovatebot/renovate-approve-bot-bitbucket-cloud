@@ -33,16 +33,6 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
 
-      - name: Init platform
-        run: |
-          git config --global core.autocrlf false
-          git config --global core.symlinks true
-          git config --global user.email 'renovate@whitesourcesoftware.com'
-          git config --global user.name  'Renovate Bot'
-          npm config set scripts-prepend-node-path true
-          echo "Node $(node --version)"
-          echo "npm $(npm --version)"
-
       - name: Install Node.js dependencies
         run: npm ci
 
@@ -65,16 +55,6 @@ jobs:
         with:
           node-version-file: .nvmrc
           cache: npm
-
-      - name: Init platform
-        run: |
-          git config --global core.autocrlf false
-          git config --global core.symlinks true
-          git config --global user.email 'renovate@whitesourcesoftware.com'
-          git config --global user.name  'Renovate Bot'
-          npm config set scripts-prepend-node-path true
-          echo "Node $(node --version)"
-          echo "npm $(npm --version)"
 
       - name: Install Node.js dependencies
         run: npm ci
@@ -126,16 +106,6 @@ jobs:
         with:
           node-version-file: .nvmrc
           cache: npm
-
-      - name: Init platform
-        run: |
-          git config --global core.autocrlf false
-          git config --global core.symlinks true
-          git config --global user.email 'renovate@whitesourcesoftware.com'
-          git config --global user.name  'Renovate Bot'
-          npm config set scripts-prepend-node-path true
-          echo "Node $(node --version)"
-          echo "npm $(npm --version)"
 
       - name: Install Node.js dependencies
         run: npm ci
