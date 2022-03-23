@@ -1,4 +1,4 @@
-FROM docker.io/library/node:14.19.1-alpine@sha256:f0c5afa3a649be68f661e51b1b5c26b0b634546bda64d74c55c1d4b64b8da1f5
+FROM docker.io/library/node:14.19.1-alpine@sha256:c9449668bc8cef3f28589d254aeac87117e48ce3bf60ef686cb8526aa9fa42ef
 
 LABEL \
   org.opencontainers.image.source="https://github.com/renovatebot/renovate-approve-bot-bitbucket-cloud" \
