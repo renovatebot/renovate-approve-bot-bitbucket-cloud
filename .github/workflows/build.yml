@@ -9,7 +9,7 @@ on:
       - main
 
 env:
-  IMAGE_NAME: ghcr.io/renovatebot/renovate-approve-bot-bitbucket-cloud
+  IMAGE_NAME: ghcr.io/yieldlab/renovate-approve-bot-bitbucket-server
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.number || github.ref }}

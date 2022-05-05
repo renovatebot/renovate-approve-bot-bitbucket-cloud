@@ -1,10 +1,12 @@
 const nock = require('nock');
 
+const BITBUCKET_URL = 'http://bitbucket.example';
 const BITBUCKET_USERNAME = 'renovate-approve-bot';
 const BITBUCKET_PASSWORD = 'r3novate-@pprove-b0t';
 const RENOVATE_BOT_USER = 'renovate-bot';
 
 process.env = Object.assign(process.env, {
+  BITBUCKET_URL,
   BITBUCKET_USERNAME,
   BITBUCKET_PASSWORD,
   RENOVATE_BOT_USER,
@@ -12,7 +14,6 @@ process.env = Object.assign(process.env, {
 
 const bot = require('./index');
 
-const API_BASE_URL = 'https://api.bitbucket.org';
 const BASIC_AUTH = { user: BITBUCKET_USERNAME, pass: BITBUCKET_PASSWORD };
 
 const autoMergeDescription = '...\n\n🚦 **Automerge**: Enabled.\n\n...';
@@ -55,40 +56,90 @@ describe('isAutomerging', () => {
 });
 
 describe('getPullRequests', () => {
-  const pullRequestsEndpoint = `/2.0/pullrequests/${RENOVATE_BOT_USER}`;
+  const pullRequestsEndpoint = '/rest/api/1.0/dashboard/pull-requests';
 
   it('gets pull-requests in a single page', async () => {
-    nock(API_BASE_URL)
+    nock(BITBUCKET_URL)
       .get(pullRequestsEndpoint)
       .basicAuth(BASIC_AUTH)
+      .query({
+        role: 'REVIEWER',
+        state: 'OPEN',
+      })
       .reply(200, {
         values: [
           {
             description: autoMergeDescription,
-            links: {
-              self: {
-                href: 'https://api.bitbucket.org/2.0/repositories/myworkspace/myrepo/pullrequests/1',
+            author: {
+              user: {
+                slug: RENOVATE_BOT_USER,
+                // omitted attributes...
               },
+              // omitted attributes...
+            },
+            links: {
+              self: [
+                {
+                  href: 'https://bitbucket.example/users/myuser/repos/myrepo/pull-requests/1',
+                },
+              ],
               // omitted attributes...
             },
             // omitted attributes...
           },
           {
             description: manualMergeDescription,
-            links: {
-              self: {
-                href: 'https://api.bitbucket.org/2.0/repositories/myworkspace/myrepo/pullrequests/2',
+            author: {
+              user: {
+                slug: RENOVATE_BOT_USER,
+                // omitted attributes...
               },
+              // omitted attributes...
+            },
+            links: {
+              self: [
+                {
+                  href: 'https://bitbucket.example/projects/myproject/repos/myrepo/pull-requests/2',
+                },
+              ],
               // omitted attributes...
             },
             // omitted attributes...
           },
           {
             description: autoMergeDescription,
-            links: {
-              self: {
-                href: 'https://api.bitbucket.org/2.0/repositories/myworkspace/myrepo/pullrequests/3',
+            author: {
+              user: {
+                slug: RENOVATE_BOT_USER,
+                // omitted attributes...
               },
+              // omitted attributes...
+            },
+            links: {
+              self: [
+                {
+                  href: 'https://bitbucket.example/projects/myproject/repos/myrepo/pull-requests/3',
+                },
+              ],
+              // omitted attributes...
+            },
+            // omitted attributes...
+          },
+          {
+            description: autoMergeDescription,
+            author: {
+              user: {
+                slug: `not-${RENOVATE_BOT_USER}`,
+                // omitted attributes...
+              },
+              // omitted attributes...
+            },
+            links: {
+              self: [
+                {
+                  href: 'https://bitbucket.example/projects/myproject/repos/myrepo/pull-requests/3',
+                },
+              ],
               // omitted attributes...
             },
             // omitted attributes...
@@ -106,79 +157,134 @@ describe('getPullRequests', () => {
     }
 
     expect(pullRequests).toStrictEqual([
-      'https://api.bitbucket.org/2.0/repositories/myworkspace/myrepo/pullrequests/1',
-      'https://api.bitbucket.org/2.0/repositories/myworkspace/myrepo/pullrequests/3',
+      'http://bitbucket.example/rest/api/1.0/users/myuser/repos/myrepo/pull-requests/1',
+      'http://bitbucket.example/rest/api/1.0/projects/myproject/repos/myrepo/pull-requests/3',
     ]);
   });
 
   it('gets pull-requests in multiple pages', async () => {
-    nock(API_BASE_URL)
+    nock(BITBUCKET_URL)
       .get(pullRequestsEndpoint)
       .basicAuth(BASIC_AUTH)
+      .query({
+        role: 'REVIEWER',
+        state: 'OPEN',
+      })
       .reply(200, {
         values: [
           {
             description: autoMergeDescription,
-            links: {
-              self: {
-                href: 'https://api.bitbucket.org/2.0/repositories/myworkspace/myrepo/pullrequests/1',
+            author: {
+              user: {
+                slug: RENOVATE_BOT_USER,
+                // omitted attributes...
               },
+              // omitted attributes...
+            },
+            links: {
+              self: [
+                {
+                  href: 'https://bitbucket.example/projects/myproject/repos/myrepo/pull-requests/1',
+                },
+              ],
               // omitted attributes...
             },
             // omitted attributes...
           },
           {
             description: manualMergeDescription,
-            links: {
-              self: {
-                href: 'https://api.bitbucket.org/2.0/repositories/myworkspace/myrepo/pullrequests/2',
+            author: {
+              user: {
+                slug: RENOVATE_BOT_USER,
+                // omitted attributes...
               },
+              // omitted attributes...
+            },
+            links: {
+              self: [
+                {
+                  href: 'https://bitbucket.example/projects/myproject/repos/myrepo/pull-requests/2',
+                },
+              ],
               // omitted attributes...
             },
             // omitted attributes...
           },
           {
             description: autoMergeDescription,
-            links: {
-              self: {
-                href: 'https://api.bitbucket.org/2.0/repositories/myworkspace/myrepo/pullrequests/3',
+            author: {
+              user: {
+                slug: RENOVATE_BOT_USER,
+                // omitted attributes...
               },
+              // omitted attributes...
+            },
+            links: {
+              self: [
+                {
+                  href: 'https://bitbucket.example/projects/myproject/repos/myrepo/pull-requests/3',
+                },
+              ],
               // omitted attributes...
             },
             // omitted attributes...
           },
         ],
-        next: `${API_BASE_URL}${pullRequestsEndpoint}?page=2`,
+        isLastPage: false,
+        nextPageStart: 3,
         // omitted attributes...
       });
 
-    nock(API_BASE_URL)
+    nock(BITBUCKET_URL)
       .get(pullRequestsEndpoint)
       .basicAuth(BASIC_AUTH)
-      .query({ page: 2 })
+      .query({
+        role: 'REVIEWER',
+        state: 'OPEN',
+        start: 3,
+      })
       .reply(200, {
         values: [
           {
             description: manualMergeDescription,
-            links: {
-              self: {
-                href: 'https://api.bitbucket.org/2.0/repositories/myworkspace/myrepo/pullrequests/5',
+            author: {
+              user: {
+                slug: RENOVATE_BOT_USER,
+                // omitted attributes...
               },
+              // omitted attributes...
+            },
+            links: {
+              self: [
+                {
+                  href: 'https://bitbucket.example/projects/myproject/repos/myrepo/pull-requests/5',
+                },
+              ],
               // omitted attributes...
             },
             // omitted attributes...
           },
           {
             description: autoMergeDescription,
-            links: {
-              self: {
-                href: 'https://api.bitbucket.org/2.0/repositories/myworkspace/myrepo/pullrequests/6',
+            author: {
+              user: {
+                slug: RENOVATE_BOT_USER,
+                // omitted attributes...
               },
+              // omitted attributes...
+            },
+            links: {
+              self: [
+                {
+                  href: 'https://bitbucket.example/projects/myproject/repos/myrepo/pull-requests/6',
+                },
+              ],
               // omitted attributes...
             },
             // omitted attributes...
           },
         ],
+        isLastPage: true,
         // omitted attributes...
       });
 
@@ -191,18 +297,23 @@ describe('getPullRequests', () => {
     }
 
     expect(prHrefs).toStrictEqual([
-      'https://api.bitbucket.org/2.0/repositories/myworkspace/myrepo/pullrequests/1',
-      'https://api.bitbucket.org/2.0/repositories/myworkspace/myrepo/pullrequests/3',
-      'https://api.bitbucket.org/2.0/repositories/myworkspace/myrepo/pullrequests/6',
+      'http://bitbucket.example/rest/api/1.0/projects/myproject/repos/myrepo/pull-requests/1',
+      'http://bitbucket.example/rest/api/1.0/projects/myproject/repos/myrepo/pull-requests/3',
+      'http://bitbucket.example/rest/api/1.0/projects/myproject/repos/myrepo/pull-requests/6',
     ]);
   });
 
   it('gets no pull-requests', async () => {
-    nock(API_BASE_URL)
+    nock(BITBUCKET_URL)
       .get(pullRequestsEndpoint)
       .basicAuth(BASIC_AUTH)
+      .query({
+        role: 'REVIEWER',
+        state: 'OPEN',
+      })
       .reply(200, {
         values: [],
+        isLastPage: true,
         // omitted attributes...
       });
 
@@ -220,9 +331,10 @@ describe('getPullRequests', () => {
 
 describe('approvePullRequest', () => {
   it('approves', async () => {
-    const prHref = '/2.0/repositories/myworkspace/myrepo/pullrequests/1';
-    nock(API_BASE_URL)
-      .post(`${prHref}/approve/`)
+    const prHref =
+      '/rest/api/1.0/projects/myproject/repos/myrepo/pull-requests/1';
+    nock(BITBUCKET_URL)
+      .put(`${prHref}/participants/${BITBUCKET_USERNAME}`)
       .basicAuth(BASIC_AUTH)
       .reply(200, {
         // omitted attributes...
@@ -230,15 +342,18 @@ describe('approvePullRequest', () => {
 
     const approvePullRequest = bot.__get__('approvePullRequest');
 
-    const response = await approvePullRequest(API_BASE_URL + prHref);
+    const response = await approvePullRequest(BITBUCKET_URL + prHref);
 
     expect(response.statusCode).toBe(200);
   });
 
   it('is already approved', async () => {
-    const prHref = '/2.0/repositories/myworkspace/myrepo/pullrequests/2';
-    nock(API_BASE_URL)
-      .post(`${prHref}/approve/`)
+    const prHref =
+      '/rest/api/1.0/projects/myproject/repos/myrepo/pull-requests/2';
+    nock(BITBUCKET_URL)
+      .put(`${prHref}/participants/${BITBUCKET_USERNAME}`, {
+        status: 'APPROVED',
+      })
       .basicAuth(BASIC_AUTH)
       .reply(409, {
         type: 'error',
@@ -249,7 +364,7 @@ describe('approvePullRequest', () => {
 
     const approvePullRequest = bot.__get__('approvePullRequest');
 
-    const response = await approvePullRequest(API_BASE_URL + prHref);
+    const response = await approvePullRequest(BITBUCKET_URL + prHref);
 
     expect(response.statusCode).toBe(409);
   });

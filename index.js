@@ -1,12 +1,16 @@
 const bunyan = require('bunyan');
 const got = require('got');
 
-const { BITBUCKET_USERNAME, BITBUCKET_PASSWORD, RENOVATE_BOT_USER } =
-  process.env;
+const {
+  BITBUCKET_URL,
+  BITBUCKET_USERNAME,
+  BITBUCKET_PASSWORD,
+  RENOVATE_BOT_USER,
+} = process.env;
 const MANUAL_MERGE_MESSAGE = 'merge this manually';
 
 const DEFAULT_OPTIONS = {
-  prefixUrl: 'https://api.bitbucket.org',
+  prefixUrl: BITBUCKET_URL,
   // If we use username/password options, they will be URL encoded
   // https://github.com/sindresorhus/got/issues/1169
   // https://github.com/nodejs/node/issues/31439
@@ -25,6 +29,15 @@ const log = bunyan.createLogger({
   },
 });
 
+function isCreatedByRenovateBot(pr) {
+  try {
+    return pr.author.user.slug === RENOVATE_BOT_USER;
+  } catch (error) {
+    log.error(error);
+    return false;
+  }
+}
+
 function isAutomerging(pr) {
   try {
     return !pr.description.includes(MANUAL_MERGE_MESSAGE);
@@ -34,25 +47,45 @@ function isAutomerging(pr) {
   }
 }
 
-function getPullRequests() {
-  const prEndpoint = `/2.0/pullrequests/${RENOVATE_BOT_USER}`;
-  log.info('Requesting %s%s...', DEFAULT_OPTIONS.prefixUrl, prEndpoint);
+function extractApiUrl(pr) {
+  for (const link of pr.links.self) {
+    const match = link.href.match(
+      /\/((?:projects|users)\/\S+\/repos\/\S+\/pull-requests\/\d+)/
+    );
 
-  return got.paginate('', {
+    if (match) {
+      return `${BITBUCKET_URL}/rest/api/1.0/${match[1]}`;
+    }
+  }
+
+  throw new Error(`Could not extract API URL for ${pr.links.self[0].href}`);
+}
+
+function getPullRequests() {
+  const prEndpoint = 'rest/api/1.0/dashboard/pull-requests';
+  log.info('Requesting %s%s...', prEndpoint);
+
+  return got.paginate(prEndpoint, {
     ...DEFAULT_OPTIONS,
-    pathname: prEndpoint,
+    searchParams: {
+      role: 'REVIEWER',
+      state: 'OPEN',
+    },
     pagination: {
       transform: (response) =>
         response.body.values
+          .filter((pr) => isCreatedByRenovateBot(pr))
           .filter((pr) => isAutomerging(pr))
-          .map((pr) => pr.links.self.href),
+          .map((pr) => extractApiUrl(pr)),
       paginate: (response) => {
-        if ('next' in response.body && response.body.next !== '') {
-          log.info('Requesting %s...', response.body.next);
+        if ('isLastPage' in response.body && !response.body.isLastPage) {
           return {
-            url: new URL(response.body.next),
+            searchParams: {
+              start: response.body.nextPageStart,
+            },
           };
         }
+
         log.info('All pull-requests gathered.');
         return false;
       },
@@ -61,18 +94,26 @@ function getPullRequests() {
 }
 
 function approvePullRequest(prHref) {
-  return got('', {
+  return got(`participants/${BITBUCKET_USERNAME}`, {
     ...DEFAULT_OPTIONS,
-    prefixUrl: `${prHref}/approve`,
-    method: 'POST',
+    prefixUrl: prHref,
+    method: 'PUT',
     throwHttpErrors: false,
+    json: {
+      status: 'APPROVED',
+    },
   });
 }
 
 async function main() {
-  if (!BITBUCKET_USERNAME || !BITBUCKET_PASSWORD || !RENOVATE_BOT_USER) {
+  if (
+    !BITBUCKET_URL ||
+    !BITBUCKET_USERNAME ||
+    !BITBUCKET_PASSWORD ||
+    !RENOVATE_BOT_USER
+  ) {
     log.fatal(
-      'At least one of BITBUCKET_USERNAME, BITBUCKET_PASSWORD, RENOVATE_BOT_USER environement variables is not set.'
+      'At least one of BITBUCKET_URL, BITBUCKET_USERNAME, BITBUCKET_PASSWORD, RENOVATE_BOT_USER environement variables is not set.'
     );
     process.exit(1);
   }
@@ -95,10 +136,13 @@ async function main() {
             break;
           case 409:
             // likely already approved
-            if ('error' in response.body && 'message' in response.body.error) {
+            if (
+              'errors' in response.body &&
+              'message' in response.body.errors[0]
+            ) {
               log.info(
                 { pr: prHref, res: response },
-                response.body.error.message
+                response.body.errors[0].message
               );
             } else {
               log.error({ pr: prHref, res: response }, response.body);

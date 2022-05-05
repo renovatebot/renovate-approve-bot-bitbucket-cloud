@@ -1,6 +1,6 @@
 {
-  "name": "renovate-approve-bot-bitbucket-cloud",
-  "description": "A job to approve Pull Requests from Renovate Bot on Bitbucket Cloud.",
+  "name": "renovate-approve-bot-bitbucket-server",
+  "description": "A job to approve Pull Requests from Renovate Bot on Bitbucket Server.",
   "private": true,
   "scripts": {
     "eslint": "eslint --ext .js .",
@@ -15,11 +15,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/renovatebot/renovate-approve-bot-bitbucket-cloud.git"
+    "url": "https://github.com/yieldlab/renovate-approve-bot-bitbucket-server.git"
   },
   "keywords": [
     "automerge",
-    "bitbucket-cloud",
+    "bitbucket-server",
     "bitbucket",
     "bot",
     "renovate"
@@ -31,7 +31,7 @@
   ],
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/renovatebot/renovate-approve-bot-bitbucket-cloud/issues"
+    "url": "https://github.com/yieldlab/renovate-approve-bot-bitbucket-server/issues"
   },
   "engines": {
     "node": ">=14.15.0"
