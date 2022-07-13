@@ -1,21 +1,19 @@
 const bunyan = require('bunyan');
-const got = require('got');
 
-const { BITBUCKET_USERNAME, BITBUCKET_PASSWORD, RENOVATE_BOT_USER } =
-  process.env;
-const MANUAL_MERGE_MESSAGE = 'merge this manually';
+const BitbucketCloudAdapter = require('./adapter/bitbucket-cloud');
+const BitbucketDataCenterAdapter = require('./adapter/bitbucket-data-center');
 
-const DEFAULT_OPTIONS = {
-  prefixUrl: 'https://api.bitbucket.org',
-  // If we use username/password options, they will be URL encoded
-  // https://github.com/sindresorhus/got/issues/1169
-  // https://github.com/nodejs/node/issues/31439
-  headers: {
-    Authorization: `Basic ${Buffer.from(
-      `${BITBUCKET_USERNAME}:${BITBUCKET_PASSWORD}`
-    ).toString('base64')}`,
-  },
-  responseType: 'json',
+const {
+  BITBUCKET_URL,
+  BITBUCKET_USERNAME,
+  BITBUCKET_PASSWORD,
+  RENOVATE_BOT_USER,
+} = process.env;
+
+const DEFAULT_ADAPTER_OPTIONS = {
+  BITBUCKET_USERNAME,
+  BITBUCKET_PASSWORD,
+  RENOVATE_BOT_USER,
 };
 
 const log = bunyan.createLogger({
@@ -25,47 +23,15 @@ const log = bunyan.createLogger({
   },
 });
 
-function isAutomerging(pr) {
-  try {
-    return !pr.description.includes(MANUAL_MERGE_MESSAGE);
-  } catch (error) {
-    log.error(error);
-    return false;
+function createAdapter() {
+  if (!BITBUCKET_URL) {
+    return new BitbucketCloudAdapter({ ...DEFAULT_ADAPTER_OPTIONS, log });
   }
-}
 
-function getPullRequests() {
-  const prEndpoint = `/2.0/pullrequests/${RENOVATE_BOT_USER}`;
-  log.info('Requesting %s%s...', DEFAULT_OPTIONS.prefixUrl, prEndpoint);
-
-  return got.paginate('', {
-    ...DEFAULT_OPTIONS,
-    pathname: prEndpoint,
-    pagination: {
-      transform: (response) =>
-        response.body.values
-          .filter((pr) => isAutomerging(pr))
-          .map((pr) => pr.links.self.href),
-      paginate: (response) => {
-        if ('next' in response.body && response.body.next !== '') {
-          log.info('Requesting %s...', response.body.next);
-          return {
-            url: new URL(response.body.next),
-          };
-        }
-        log.info('All pull-requests gathered.');
-        return false;
-      },
-    },
-  });
-}
-
-function approvePullRequest(prHref) {
-  return got('', {
-    ...DEFAULT_OPTIONS,
-    prefixUrl: `${prHref}/approve`,
-    method: 'POST',
-    throwHttpErrors: false,
+  return new BitbucketDataCenterAdapter(log, {
+    ...DEFAULT_ADAPTER_OPTIONS,
+    BITBUCKET_URL,
+    log,
   });
 }
 
@@ -77,9 +43,11 @@ async function main() {
     process.exit(1);
   }
 
+  const adapter = createAdapter();
+
   let prHrefs;
   try {
-    prHrefs = await getPullRequests();
+    prHrefs = await adapter.getPullRequests();
   } catch (error) {
     log.fatal(error);
     process.exit(1);
@@ -87,7 +55,8 @@ async function main() {
 
   for await (const prHref of prHrefs) {
     log.info('Approving: %s', prHref);
-    approvePullRequest(prHref)
+    adapter
+      .approvePullRequest(prHref)
       .then((response) => {
         switch (response.statusCode) {
           case 200:

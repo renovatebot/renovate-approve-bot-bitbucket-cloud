@@ -1,10 +1,10 @@
-# renovate-approve-bot - Bitbucket Cloud Edition
+# renovate-approve-bot - Bitbucket Edition
 
-A job to approve Pull Requests from [Renovate Bot](https://github.com/renovatebot/renovate) on Bitbucket Cloud. This enables you to require Pull Request approvals on your repository while also utilising Renovate's "automerge" feature.
+A job to approve Pull Requests from [Renovate Bot](https://github.com/renovatebot/renovate) on Bitbucket Cloud and Data Center (and Server). This enables you to require Pull Request approvals on your repository while also utilising Renovate's "automerge" feature.
 
 For Github, see [renovatebot/renovate-approve-bot](https://github.com/renovatebot/renovate-approve-bot).
 
-[![build](https://github.com/renovatebot/renovate-approve-bot-bitbucket-cloud/actions/workflows/build.yml/badge.svg)](https://github.com/renovatebot/renovate-approve-bot-bitbucket-cloud/actions/workflows/build.yml)
+[![build](https://github.com/renovatebot/renovate-approve-bot-bitbucket/actions/workflows/build.yml/badge.svg)](https://github.com/renovatebot/renovate-approve-bot-bitbucket/actions/workflows/build.yml)
 
 ## How it works
 
@@ -14,7 +14,7 @@ On each run, the bot will:
 2. Filter out PRs where "automerge" is disabled
 3. Approve the "automerge" PRs
 
-## Usage
+## Bitbucket Cloud usage
 
 1. Create a Bitbucket Cloud account for the renovate-approve-bot and add it to your team (Recommended)
 2. [Create an App password](https://support.atlassian.com/bitbucket-cloud/docs/app-passwords/) with `pullrequest:write` scope
@@ -33,7 +33,7 @@ On each run, the bot will:
        --env BITBUCKET_USERNAME \
        --env BITBUCKET_PASSWORD \
        --env RENOVATE_BOT_USER \
-       ghcr.io/renovatebot/renovate-approve-bot-bitbucket-cloud:latest
+       ghcr.io/renovatebot/renovate-approve-bot-bitbucket:latest
      ```
 
    - From source:
@@ -43,7 +43,7 @@ On each run, the bot will:
      node ./index.js
      ```
 
-## Bitbucket Pipelines example
+### Bitbucket Pipelines example
 
 Example to run renovate-approve-bot in a custom Bitbucket Pipeline on a schedule:
 
@@ -56,7 +56,7 @@ Example to run renovate-approve-bot in a custom Bitbucket Pipeline on a schedule
        renovate-approve-bot:
          - step:
              name: Renovate Approve Bot
-             image: ghcr.io/renovatebot/renovate-approve-bot-bitbucket-cloud:latest
+             image: ghcr.io/renovatebot/renovate-approve-bot-bitbucket:latest
              script:
                - export RENOVATE_BOT_USER=your-renovate-bot-user
                - node /opt/app/index.js
@@ -64,7 +64,38 @@ Example to run renovate-approve-bot in a custom Bitbucket Pipeline on a schedule
 
 3. Create a [schedule](https://support.atlassian.com/bitbucket-cloud/docs/pipeline-triggers/#On-schedule) for the custom pipeline (e.g. Hourly)
 
+## Bitbucket Data Center and Server usage
+
+1. Create an account for the renovate-approve-bot in your Bitbucket Data Center or Server instance
+2. Create a [HTTP access token](https://confluence.atlassian.com/bitbucketserver/http-access-tokens-939515499.html) (formerly known as personal access token) for the renovate-approve-bot account
+3. Grant read access on your repositories to the renovate-approve-bot account
+4. Optionally, add the renovate-approve-bot account to the default reviewers if you require approval from default reviewers
+5. Set the environment variables:
+   - `BITBUCKET_URL`: URL of your Bitbucket Data Center or Server instance
+   - `BITBUCKET_USERNAME`: Bitbucket username associated with the account used for renovate-approve-bot
+   - `BITBUCKET_PASSWORD`: HTTP access token of the renovate-approve-bot account
+   - `RENOVATE_BOT_USER`: Bitbucket username of your Renovate Bot
+6. Run the bot (on a schedule similarly to Renovate Bot, e.g. as a [Cron](https://en.wikipedia.org/wiki/Cron) job):
+
+   - With Docker:
+
+     ```shell
+     docker run --rm \
+       --env BITBUCKET_URL \
+       --env BITBUCKET_USERNAME \
+       --env BITBUCKET_PASSWORD \
+       --env RENOVATE_BOT_USER \
+       ghcr.io/renovatebot/renovate-approve-bot-bitbucket:latest
+     ```
+
+   - From source:
+
+     ```shell
+     npm install --production
+     node ./index.js
+     ```
+
 ## Security / Disclosure
 
-If you discover any important bug with `renovate-approve-bot-bitbucket-cloud` that may pose a security problem, please disclose it confidentially to renovate-disclosure@whitesourcesoftware.com first, so that it can be assessed and hopefully fixed prior to being exploited.
+If you discover any important bug with `renovate-approve-bot-bitbucket` that may pose a security problem, please disclose it confidentially to renovate-disclosure@whitesourcesoftware.com first, so that it can be assessed and hopefully fixed prior to being exploited.
 Please do not raise GitHub issues for security-related doubts or problems.
