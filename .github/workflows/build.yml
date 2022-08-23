@@ -82,12 +82,12 @@ jobs:
           fetch-depth: 2
 
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@3f62b754e23e0dd60f91b744033e1dc1654c0ec6 # tag=v2.1.15
+        uses: github/codeql-action/init@7fee4ca032ac341c12486c4c06822c5221c76533 # tag=v2.1.20
         with:
           languages: javascript
 
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@3f62b754e23e0dd60f91b744033e1dc1654c0ec6 # tag=v2.1.15
+        uses: github/codeql-action/analyze@7fee4ca032ac341c12486c4c06822c5221c76533 # tag=v2.1.20
 
   build:
     needs: [codeql-analyze, lint, test]
