@@ -30,7 +30,7 @@ jobs:
           fetch-depth: 2
 
       - name: Set up Node.js
-        uses: actions/setup-node@eeb10cff27034e7acf239c5d29f62154018672fd # tag=v3.3.0
+        uses: actions/setup-node@2fddd8803e2f5c9604345a0b591c3020ee971a93 # tag=v3.4.1
         with:
           node-version-file: .nvmrc
           cache: npm
@@ -55,7 +55,7 @@ jobs:
           fetch-depth: 2
 
       - name: Set up Node.js
-        uses: actions/setup-node@eeb10cff27034e7acf239c5d29f62154018672fd # tag=v3.3.0
+        uses: actions/setup-node@2fddd8803e2f5c9604345a0b591c3020ee971a93 # tag=v3.4.1
         with:
           node-version-file: .nvmrc
           cache: npm
@@ -82,12 +82,12 @@ jobs:
           fetch-depth: 2
 
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@3f62b754e23e0dd60f91b744033e1dc1654c0ec6 # tag=v2.1.15
+        uses: github/codeql-action/init@7fee4ca032ac341c12486c4c06822c5221c76533 # tag=v2.1.20
         with:
           languages: javascript
 
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@3f62b754e23e0dd60f91b744033e1dc1654c0ec6 # tag=v2.1.15
+        uses: github/codeql-action/analyze@7fee4ca032ac341c12486c4c06822c5221c76533 # tag=v2.1.20
 
   build:
     needs: [codeql-analyze, lint, test]
@@ -108,7 +108,7 @@ jobs:
           fetch-depth: 0
 
       - name: Set up Node.js
-        uses: actions/setup-node@eeb10cff27034e7acf239c5d29f62154018672fd # tag=v3.3.0
+        uses: actions/setup-node@2fddd8803e2f5c9604345a0b591c3020ee971a93 # tag=v3.4.1
         with:
           node-version-file: .nvmrc
           cache: npm
@@ -130,7 +130,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build container images
-        uses: docker/build-push-action@e551b19e49efd4e98792db7592c17c09b89db8d8 # tag=v3.0.0
+        uses: docker/build-push-action@c84f38281176d4c9cdb1626ffafcd6b3911b5d94 # tag=v3.1.1
         with:
           platforms: linux/amd64,linux/arm/v7,linux/arm64
           tags: ${{ env.IMAGE_NAME }}:latest
@@ -144,7 +144,7 @@ jobs:
 
       - name: Push container images
         if: ${{ env.IMAGE_TAG != '' }}
-        uses: docker/build-push-action@e551b19e49efd4e98792db7592c17c09b89db8d8 # tag=v3.0.0
+        uses: docker/build-push-action@c84f38281176d4c9cdb1626ffafcd6b3911b5d94 # tag=v3.1.1
         with:
           platforms: linux/amd64,linux/arm/v7,linux/arm64
           push: true
