@@ -130,7 +130,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build container images
-        uses: docker/build-push-action@e551b19e49efd4e98792db7592c17c09b89db8d8 # tag=v3.0.0
+        uses: docker/build-push-action@c84f38281176d4c9cdb1626ffafcd6b3911b5d94 # tag=v3.1.1
         with:
           platforms: linux/amd64,linux/arm/v7,linux/arm64
           tags: ${{ env.IMAGE_NAME }}:latest
@@ -144,7 +144,7 @@ jobs:
 
       - name: Push container images
         if: ${{ env.IMAGE_TAG != '' }}
-        uses: docker/build-push-action@e551b19e49efd4e98792db7592c17c09b89db8d8 # tag=v3.0.0
+        uses: docker/build-push-action@c84f38281176d4c9cdb1626ffafcd6b3911b5d94 # tag=v3.1.1
         with:
           platforms: linux/amd64,linux/arm/v7,linux/arm64
           push: true
