@@ -1,0 +1,36 @@
+name: Bug report
+description: Report a bug.
+labels: ['type:bug', 'status:requirements', 'priority-5-triage']
+body:
+  - type: input
+    id: version-of-renovate-approve-bot
+    attributes:
+      label: Version.
+      description: What version of the Renovate Approve Bot are you using?
+    validations:
+      required: true
+
+  - type: textarea
+    id: describe-bug
+    attributes:
+      label: Describe the bug.
+      description: 'Do not report any security concerns here. Email [renovate-disclosure@whitesourcesoftware.com](mailto:renovate-disclosure@whitesourcesoftware.com) instead.'
+    validations:
+      required: true
+
+  - type: textarea
+    id: relevant-logs
+    attributes:
+      label: Relevant logs/debug messages.
+      description: |
+        Copy/paste any relevant logs or debug messages in this field.
+      value: |
+        <details><summary>Logs</summary>
+
+        ```
+        Copy/paste any log here, between the starting and ending backticks
+        ```
+
+        </details>
+    validations:
+      required: false
