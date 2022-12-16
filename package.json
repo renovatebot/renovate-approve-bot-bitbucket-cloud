@@ -38,7 +38,7 @@
   },
   "dependencies": {
     "bunyan": "1.8.15",
-    "got": "11.8.5"
+    "got": "11.8.6"
   },
   "devDependencies": {
     "@semantic-release/exec": "6.0.3",
