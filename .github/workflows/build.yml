@@ -29,11 +29,17 @@ jobs:
         with:
           fetch-depth: 2
 
+      - name: Enable corepack
+        run: corepack enable npm
+
       - name: Set up Node.js
         uses: actions/setup-node@e33196f7422957bea03ed53f6fbb155025ffc7b8 # v3.7.0
         with:
           node-version-file: .nvmrc
           cache: npm
+
+      - name: Enable corepack
+        run: corepack enable npm
 
       - name: Install Node.js dependencies
         run: npm ci
@@ -54,11 +60,17 @@ jobs:
         with:
           fetch-depth: 2
 
+      - name: Enable corepack
+        run: corepack enable npm
+
       - name: Set up Node.js
         uses: actions/setup-node@e33196f7422957bea03ed53f6fbb155025ffc7b8 # v3.7.0
         with:
           node-version-file: .nvmrc
           cache: npm
+
+      - name: Enable corepack
+        run: corepack enable npm
 
       - name: Install Node.js dependencies
         run: npm ci
@@ -107,11 +119,17 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Enable corepack
+        run: corepack enable npm
+
       - name: Set up Node.js
         uses: actions/setup-node@e33196f7422957bea03ed53f6fbb155025ffc7b8 # v3.7.0
         with:
           node-version-file: .nvmrc
           cache: npm
+
+      - name: Enable corepack
+        run: corepack enable npm
 
       - name: Install Node.js dependencies
         run: npm ci
