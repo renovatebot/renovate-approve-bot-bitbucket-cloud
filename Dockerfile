@@ -1,4 +1,4 @@
-FROM docker.io/library/node:14.21.3-alpine@sha256:434215b487a329c9e867202ff89e704d3a75e554822e07f3e0c0f9e606121b33
+FROM docker.io/library/node:18.17.0-alpine@sha256:93d91deea65c9a0475507e8bc8b1917d6278522322f00c00b3ab09cab6830060
 
 LABEL \
   org.opencontainers.image.source="https://github.com/renovatebot/renovate-approve-bot-bitbucket-cloud" \
@@ -6,6 +6,8 @@ LABEL \
   org.opencontainers.image.licenses="ISC"
 
 WORKDIR /opt/app
+
+RUN corepack enable npm
 
 COPY package.json package-lock.json ./
 
