@@ -56,7 +56,7 @@
     "nock": "13.5.1",
     "npm-run-all2": "6.1.2",
     "prettier": "3.2.5",
-    "semantic-release": "23.0.1"
+    "semantic-release": "23.0.2"
   },
   "packageManager": "npm@9.9.0"
 }
