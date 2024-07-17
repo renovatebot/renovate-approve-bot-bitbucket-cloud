@@ -4,7 +4,7 @@ const got = require('got');
 const { BITBUCKET_USERNAME, BITBUCKET_PASSWORD, RENOVATE_BOT_USER } =
   process.env;
 const MANUAL_MERGE_MESSAGE = 'merge this manually';
-const AUTO_MERGE_MESSAGE = "🚦 **Automerge**: Enabled."
+const AUTO_MERGE_MESSAGE = "**Automerge**: Enabled."
 
 const DEFAULT_OPTIONS = {
   prefixUrl: 'https://api.bitbucket.org',
