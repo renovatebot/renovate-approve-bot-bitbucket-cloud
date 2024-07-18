@@ -4,7 +4,7 @@ const got = require('got');
 const { BITBUCKET_USERNAME, BITBUCKET_PASSWORD, RENOVATE_BOT_USER } =
   process.env;
 const MANUAL_MERGE_MESSAGE = 'merge this manually';
-const AUTO_MERGE_MESSAGE = "**Automerge**: Enabled."
+const AUTO_MERGE_MESSAGE = '**Automerge**: Enabled.';
 
 const DEFAULT_OPTIONS = {
   prefixUrl: 'https://api.bitbucket.org',
@@ -28,7 +28,10 @@ const log = bunyan.createLogger({
 
 function isAutomerging(pr) {
   try {
-    return pr.description.includes(AUTO_MERGE_MESSAGE) && !pr.description.includes(MANUAL_MERGE_MESSAGE);
+    return (
+      pr.description.includes(AUTO_MERGE_MESSAGE) &&
+      !pr.description.includes(MANUAL_MERGE_MESSAGE)
+    );
   } catch (error) {
     log.error(error);
     return false;
