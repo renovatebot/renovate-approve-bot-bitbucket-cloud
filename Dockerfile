@@ -7,8 +7,6 @@ LABEL \
 
 WORKDIR /opt/app
 
-RUN corepack enable npm
-
 COPY package.json package-lock.json ./
 
 RUN npm install --production
