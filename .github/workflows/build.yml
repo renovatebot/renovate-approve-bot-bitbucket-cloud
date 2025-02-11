@@ -98,7 +98,7 @@ jobs:
       packages: write
       pull-requests: write
 
-    timeout-minutes: 10
+    timeout-minutes: 15
 
     steps:
       # full checkout for semantic-release
