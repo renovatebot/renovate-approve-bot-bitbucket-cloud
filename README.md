@@ -23,6 +23,7 @@ On each run, the bot will:
 5. Set the environment variables:
    - `BITBUCKET_USERNAME`: Bitbucket username associated with the account used for renovate-approve-bot
    - `BITBUCKET_PASSWORD`: Bitbucket App password created in step 2
+   - `BITBUCKET_WORKSPACE`: Bitbucket workspace in which PR's will be searched for and approved
    - `RENOVATE_BOT_USER`: Bitbucket username of your Renovate Bot
 6. Run the bot (on a schedule similarly to Renovate Bot, e.g. as a [Cron](https://en.wikipedia.org/wiki/Cron) job):
 
@@ -32,6 +33,7 @@ On each run, the bot will:
      docker run --rm \
        --env BITBUCKET_USERNAME \
        --env BITBUCKET_PASSWORD \
+       --env BITBUCKET_WORKSPACE \
        --env RENOVATE_BOT_USER \
        ghcr.io/renovatebot/renovate-approve-bot-bitbucket-cloud:latest
      ```
@@ -47,7 +49,7 @@ On each run, the bot will:
 
 Example to run renovate-approve-bot in a custom Bitbucket Pipeline on a schedule:
 
-1. Add `BITBUCKET_USERNAME` and `BITBUCKET_PASSWORD` to your [repository variables](https://support.atlassian.com/bitbucket-cloud/docs/variables-and-secrets/#Repository-variables)
+1. Add `BITBUCKET_USERNAME` and `BITBUCKET_PASSWORD` and `BITBUCKET_WORKSPACE` to your [repository variables](https://support.atlassian.com/bitbucket-cloud/docs/variables-and-secrets/#Repository-variables)
 2. Create a custom pipeline in your `bitbucket-pipelines.yml` file
 
    ```yaml

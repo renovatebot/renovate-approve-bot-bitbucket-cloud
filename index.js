@@ -1,8 +1,12 @@
 const bunyan = require('bunyan');
 const got = require('got');
 
-const { BITBUCKET_USERNAME, BITBUCKET_PASSWORD, RENOVATE_BOT_USER } =
-  process.env;
+const {
+  BITBUCKET_USERNAME,
+  BITBUCKET_PASSWORD,
+  BITBUCKET_WORKSPACE,
+  RENOVATE_BOT_USER,
+} = process.env;
 const MANUAL_MERGE_MESSAGE = 'merge this manually';
 const AUTO_MERGE_MESSAGE = '**Automerge**: Enabled.';
 
@@ -39,7 +43,7 @@ function isAutomerging(pr) {
 }
 
 function getPullRequests() {
-  const prEndpoint = `/2.0/pullrequests/${RENOVATE_BOT_USER}`;
+  const prEndpoint = `/2.0/workspaces/${BITBUCKET_WORKSPACE}/pullrequests/${RENOVATE_BOT_USER}`;
   log.info('Requesting %s%s...', DEFAULT_OPTIONS.prefixUrl, prEndpoint);
 
   return got.paginate('', {
@@ -74,9 +78,14 @@ function approvePullRequest(prHref) {
 }
 
 async function main() {
-  if (!BITBUCKET_USERNAME || !BITBUCKET_PASSWORD || !RENOVATE_BOT_USER) {
+  if (
+    !BITBUCKET_USERNAME ||
+    !BITBUCKET_PASSWORD ||
+    !BITBUCKET_WORKSPACE ||
+    !RENOVATE_BOT_USER
+  ) {
     log.fatal(
-      'At least one of BITBUCKET_USERNAME, BITBUCKET_PASSWORD, RENOVATE_BOT_USER environement variables is not set.'
+      'At least one of BITBUCKET_USERNAME, BITBUCKET_PASSWORD, BITBUCKET_WORKSPACE, RENOVATE_BOT_USER environement variables is not set.'
     );
     process.exit(1);
   }

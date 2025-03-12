@@ -2,11 +2,13 @@ const nock = require('nock');
 
 const BITBUCKET_USERNAME = 'renovate-approve-bot';
 const BITBUCKET_PASSWORD = 'r3novate-@pprove-b0t';
+const BITBUCKET_WORKSPACE = 'myworkspace';
 const RENOVATE_BOT_USER = 'renovate-bot';
 
 process.env = Object.assign(process.env, {
   BITBUCKET_USERNAME,
   BITBUCKET_PASSWORD,
+  BITBUCKET_WORKSPACE,
   RENOVATE_BOT_USER,
 });
 
@@ -55,7 +57,7 @@ describe('isAutomerging', () => {
 });
 
 describe('getPullRequests', () => {
-  const pullRequestsEndpoint = `/2.0/pullrequests/${RENOVATE_BOT_USER}`;
+  const pullRequestsEndpoint = `/2.0/workspaces/${BITBUCKET_WORKSPACE}/pullrequests/${RENOVATE_BOT_USER}`;
 
   it('gets pull-requests in a single page', async () => {
     nock(API_BASE_URL)
