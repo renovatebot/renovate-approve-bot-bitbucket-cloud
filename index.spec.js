@@ -8,6 +8,7 @@ const RENOVATE_BOT_USER = 'renovate-bot';
 process.env = Object.assign(process.env, {
   BITBUCKET_USERNAME,
   BITBUCKET_PASSWORD,
+  BITBUCKET_WORKSPACE,
   RENOVATE_BOT_USER,
 });
 
