@@ -26,7 +26,6 @@ On each run, the bot will:
    - `BITBUCKET_WORKSPACE`: Bitbucket workspace in which PR's will be searched for and approved
    - `RENOVATE_BOT_USER`: Bitbucket username of your Renovate Bot
 6. Run the bot (on a schedule similarly to Renovate Bot, e.g. as a [Cron](https://en.wikipedia.org/wiki/Cron) job):
-
    - With Docker:
 
      ```shell
