@@ -58,5 +58,5 @@
     "prettier": "3.9.10",
     "semantic-release": "24.2.9"
   },
-  "packageManager": "npm@10.9.9"
+  "packageManager": "npm@10.9.10"
 }
